@@ -1,3 +1,5 @@
+using AccountOwnerServer.Contracts;
+using AccountOwnerServer.Repository;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,5 +22,10 @@ public static class ServiceExtensions
     {
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(config.GetConnectionString("PostgresConnection")));
+    }
+
+    public static void ConfigureRepositoryWrapper(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
 }
