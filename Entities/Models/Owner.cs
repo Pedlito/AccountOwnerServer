@@ -6,9 +6,16 @@ namespace Entities.Models;
 [EntityTypeConfiguration(typeof(OwnerEntityTypeConf))]
 public class Owner : DatabaseBaseModel
 {
+    public Owner()
+    {
+        Accounts = new HashSet<Account>();
+    }
+
     public required string Name { get; set; }
     public required DateTime DateOfBirth { get; set; }
     public string? Address { get; set; }
+
+    public virtual ICollection<Account> Accounts { get; set; }
 }
 
 public class OwnerEntityTypeConf : IEntityTypeConfiguration<Owner>
@@ -18,10 +25,9 @@ public class OwnerEntityTypeConf : IEntityTypeConfiguration<Owner>
         builder.ToTable("owner", "owner_acount");
 
         builder.HasKey(t => t.Code);
-
+        
         builder.Property(t => t.Code)
-            .HasColumnName("code").HasColumnType("smallserial").IsRequired()
-            .ValueGeneratedOnAdd().UseIdentityColumn();
+            .HasColumnName("code").HasColumnType("smallint").UseIdentityColumn();
         
         builder.Property(t => t.Name)
             .HasColumnName("name").HasColumnType("varchar(50)").IsRequired();
@@ -31,5 +37,8 @@ public class OwnerEntityTypeConf : IEntityTypeConfiguration<Owner>
 
         builder.Property(t => t.Address)
             .HasColumnName("address").HasColumnType("varchar(150)");
+        
+        builder.HasMany(t => t.Accounts).WithOne(t => t.Owner)
+            .HasForeignKey(t => t.OwnerCode).HasPrincipalKey(t => t.Code);
     }
 }
