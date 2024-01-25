@@ -19,7 +19,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAllOwners()
+    public ActionResult<IEnumerable<OwnerDto>> GetAllOwners()
     {
         try
         {
@@ -31,6 +31,22 @@ public class OwnerController : ControllerBase
         catch (Exception)
         {
             return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<OwnerDto> GetOwnerById(int id)
+    {
+        var owner = _repository.Owner.GetOwnerById(id);
+
+        if (owner is null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            var ownerResult = _mapper.Map<OwnerDto>(owner);
+            return Ok(ownerResult);
         }
     }
 }
