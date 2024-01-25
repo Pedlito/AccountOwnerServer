@@ -19,14 +19,14 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OwnerDto>> GetAllOwners()
+    public ActionResult<IEnumerable<OwnerDto>> GetAll()
     {
         try
         {
-            var owners = _repository.Owner.GetAllOwners();
+            var dbEnum = _repository.Owner.GetAllOwners();
 
-            var ownersResult = _mapper.Map<IEnumerable<OwnerDto>>(owners);
-            return Ok(ownersResult);
+            var result = _mapper.Map<IEnumerable<OwnerDto>>(dbEnum);
+            return Ok(result);
         }
         catch (Exception)
         {
@@ -35,18 +35,48 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<OwnerDto> GetOwnerById(int id)
+    public ActionResult<OwnerDto> GetById(int id)
     {
-        var owner = _repository.Owner.GetOwnerById(id);
+        try
+        {
+            var dbItem = _repository.Owner.GetOwnerById(id);
 
-        if (owner is null)
-        {
-            return NotFound();
+            if (dbItem is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var result = _mapper.Map<OwnerDto>(dbItem);
+                return Ok(result);
+            }
         }
-        else
+        catch (System.Exception)
         {
-            var ownerResult = _mapper.Map<OwnerDto>(owner);
-            return Ok(ownerResult);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet("{id}/accounts")]
+    public ActionResult<OwnerAccountsDto> GetWithDetails(int id)
+    {
+        try
+        {
+            var dbItem = _repository.Owner.GetOwnerWithDetails(id);
+
+            if (dbItem is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var result = _mapper.Map<OwnerAccountsDto>(dbItem);
+                return Ok(result);
+            }
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(500, "Internal server error");
         }
     }
 }

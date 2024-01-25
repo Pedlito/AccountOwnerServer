@@ -1,6 +1,7 @@
 using AccountOwnerServer.Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountOwnerServer.Repository;
 
@@ -20,5 +21,10 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     public Owner? GetOwnerById(int ownerId)
     {
         return FindByCondition(owner =>owner.Code.Equals(ownerId)).FirstOrDefault();
+    }
+
+    public Owner? GetOwnerWithDetails(int ownerId)
+    {
+        return FindByCondition(owner => owner.Code.Equals(ownerId)).Include(t => t.Accounts).FirstOrDefault();
     }
 }
