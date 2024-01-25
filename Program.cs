@@ -7,6 +7,7 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureDBContext(builder.Configuration);
 builder.Services.ConfigureRepositoryWrapper();
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
