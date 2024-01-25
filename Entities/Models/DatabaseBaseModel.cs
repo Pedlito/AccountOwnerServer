@@ -4,9 +4,6 @@ namespace Entities;
 
 public class DatabaseBaseModel
 {
-    [Column("code", Order = 1)]
-    public int Code { get; set; }
-
     [Column("create_date", TypeName = "timestamp(0)")]
     public required DateTime CreateDate { get; set; }
 

@@ -1,4 +1,6 @@
 using AccountOwnerServer.Contracts;
+using AutoMapper;
+using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountOwnerServer.Controllers;
@@ -8,10 +10,12 @@ namespace AccountOwnerServer.Controllers;
 public class OwnerController : ControllerBase
 {
     private IRepositoryWrapper _repository;
+    private IMapper _mapper;
 
-    public OwnerController(IRepositoryWrapper repository)
+    public OwnerController(IRepositoryWrapper repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -21,7 +25,8 @@ public class OwnerController : ControllerBase
         {
             var owners = _repository.Owner.GetAllOwners();
 
-            return Ok(owners);
+            var ownersResult = _mapper.Map<IEnumerable<OwnerDto>>(owners);
+            return Ok(ownersResult);
         }
         catch (Exception)
         {

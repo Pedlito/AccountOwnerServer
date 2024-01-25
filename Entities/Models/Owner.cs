@@ -11,6 +11,7 @@ public class Owner : DatabaseBaseModel
         Accounts = new HashSet<Account>();
     }
 
+    public int Code { get; set; }
     public required string Name { get; set; }
     public required DateTime DateOfBirth { get; set; }
     public string? Address { get; set; }

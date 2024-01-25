@@ -6,7 +6,7 @@ namespace Entities.Models;
 [EntityTypeConfiguration(typeof(AccountEntityTypeConf))]
 public class Account : DatabaseBaseModel
 {
-
+    public int Code { get; set; }
     public required string AccountType { get; set; }
     public int OwnerCode { get; set; }
 
