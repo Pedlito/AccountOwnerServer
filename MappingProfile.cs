@@ -8,6 +8,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Owner, OwnerDto>();
         CreateMap<Owner, OwnerAccountsDto>();
+        CreateMap<OwnerPostDto, Owner>();
         CreateMap<Account, AccountDto>();
     }
 }

@@ -10,7 +10,7 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     public OwnerRepository(AppDbContext context) : base(context)
     {
     }
-    
+
     public IEnumerable<Owner> GetAllOwners()
     {
         return FindAll()
@@ -26,5 +26,10 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     public Owner? GetOwnerWithDetails(int ownerId)
     {
         return FindByCondition(owner => owner.Code.Equals(ownerId)).Include(t => t.Accounts).FirstOrDefault();
+    }
+
+    public void CreateOwner(Owner owner)
+    {
+        Create(owner);
     }
 }

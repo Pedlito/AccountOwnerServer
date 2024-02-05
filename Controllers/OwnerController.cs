@@ -1,6 +1,7 @@
 using AccountOwnerServer.Contracts;
 using AutoMapper;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountOwnerServer.Controllers;
@@ -19,7 +20,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OwnerDto>> GetAll()
+    public ActionResult<IEnumerable<OwnerDto>> Get()
     {
         try
         {
@@ -34,7 +35,7 @@ public class OwnerController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "OwnerById")]
     public ActionResult<OwnerDto> GetById(int id)
     {
         try
@@ -77,6 +78,37 @@ public class OwnerController : ControllerBase
         catch (System.Exception)
         {
             return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpPost]
+    public ActionResult<OwnerDto> Post([FromBody] OwnerPostDto data)
+    {
+        try
+        {
+            if (data is null)
+            {
+                return BadRequest("No se ingreso la información del propietario");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Objeto de modelo invalido");
+            }
+
+            var dbItem = _mapper.Map<Owner>(data);
+
+            _repository.Owner.CreateOwner(dbItem);
+            _repository.Save();
+
+            var createdItem = _mapper.Map<OwnerDto>(dbItem);
+
+            return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
+        }
+        catch (System.Exception)
+        {
+            
+            throw;
         }
     }
 }

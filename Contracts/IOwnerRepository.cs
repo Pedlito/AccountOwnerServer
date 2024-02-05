@@ -7,4 +7,5 @@ public interface IOwnerRepository : IRepositoryBase<Owner>
     IEnumerable<Owner> GetAllOwners();
     Owner? GetOwnerById(int ownerId);
     Owner? GetOwnerWithDetails(int ownerId);
+    void CreateOwner(Owner owner);
 }
