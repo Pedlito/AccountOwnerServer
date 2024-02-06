@@ -27,8 +27,7 @@ namespace AccountOwnerServer.Migrations
                     b.Property<short>("Code")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
-                        .HasColumnName("code")
-                        .HasColumnOrder(1);
+                        .HasColumnName("code");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Code"));
 
@@ -61,7 +60,7 @@ namespace AccountOwnerServer.Migrations
                         .HasColumnType("timestamp(0)")
                         .HasColumnName("update_date");
 
-                    b.Property<short>("UpdateUser")
+                    b.Property<short?>("UpdateUser")
                         .HasColumnType("smallint")
                         .HasColumnName("update_user");
 
@@ -77,8 +76,7 @@ namespace AccountOwnerServer.Migrations
                     b.Property<short>("Code")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
-                        .HasColumnName("code")
-                        .HasColumnOrder(1);
+                        .HasColumnName("code");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Code"));
 
@@ -115,7 +113,7 @@ namespace AccountOwnerServer.Migrations
                         .HasColumnType("timestamp(0)")
                         .HasColumnName("update_date");
 
-                    b.Property<short>("UpdateUser")
+                    b.Property<short?>("UpdateUser")
                         .HasColumnType("smallint")
                         .HasColumnName("update_user");
 

@@ -17,7 +17,7 @@ public class DatabaseBaseModel
     public int CreateUser { get; set; }
 
     [Column("update_user", TypeName = "smallint")]
-    public int UpdateUser { get; set; }
+    public int? UpdateUser { get; set; }
 
     [Column("is_enable", TypeName = "bool")]
     public required bool IsEnable { get; set; }

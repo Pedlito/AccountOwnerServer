@@ -29,7 +29,7 @@ namespace AccountOwnerServer.Migrations
                     update_date = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: true),
                     delete_date = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: true),
                     create_user = table.Column<short>(type: "smallint", nullable: false),
-                    update_user = table.Column<short>(type: "smallint", nullable: false),
+                    update_user = table.Column<short>(type: "smallint", nullable: true),
                     is_enable = table.Column<bool>(type: "bool", nullable: false)
                 },
                 constraints: table =>
@@ -50,7 +50,7 @@ namespace AccountOwnerServer.Migrations
                     update_date = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: true),
                     delete_date = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: true),
                     create_user = table.Column<short>(type: "smallint", nullable: false),
-                    update_user = table.Column<short>(type: "smallint", nullable: false),
+                    update_user = table.Column<short>(type: "smallint", nullable: true),
                     is_enable = table.Column<bool>(type: "bool", nullable: false)
                 },
                 constraints: table =>
