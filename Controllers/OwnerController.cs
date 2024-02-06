@@ -157,6 +157,11 @@ public class OwnerController : ControllerBase
                 return NotFound();
             }
 
+            if (_repository.Account.AccountsByOwner(id).Any())
+            {
+                return BadRequest("No se puede eliminar este propietario, Primero se deben de eliminar las cuentas");
+            }
+
             _repository.Owner.DeleteOwner(dbItem);
             _repository.Save();
 
