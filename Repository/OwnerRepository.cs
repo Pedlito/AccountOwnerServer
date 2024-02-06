@@ -31,22 +31,22 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     public void CreateOwner(Owner owner)
     {
         owner.IsEnable = true;
+        owner.CreateUser = 5;
         owner.CreateDate = DateTime.Now;
-        Console.WriteLine(owner.CreateUser);
-        Console.WriteLine(owner.UpdateUser);
-        Console.WriteLine(owner.UpdateDate);
         Create(owner);
     }
 
     public void UpdateOwner(Owner owner)
     {
-
+        owner.UpdateDate = DateTime.Now;
+        owner.UpdateUser = 10;
         Update(owner);
     }
 
     public void DeleteOwner(Owner owner)
     {
         owner.IsEnable = false;
+        owner.UpdateUser = 15;
         owner.DeleteDate = DateTime.Now;
         Update(owner);
     }
