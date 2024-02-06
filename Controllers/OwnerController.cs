@@ -31,7 +31,7 @@ public class OwnerController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Error en el servidor");
         }
     }
 
@@ -54,7 +54,7 @@ public class OwnerController : ControllerBase
         }
         catch (System.Exception)
         {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Error en el servidor");
         }
     }
 
@@ -77,7 +77,7 @@ public class OwnerController : ControllerBase
         }
         catch (System.Exception)
         {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Error en el servidor");
         }
     }
 
@@ -108,8 +108,7 @@ public class OwnerController : ControllerBase
         }
         catch (System.Exception)
         {
-            
-            throw;
+            return StatusCode(500, "Error en el servidor");
         }
     }
 
@@ -143,8 +142,29 @@ public class OwnerController : ControllerBase
         }
         catch (System.Exception)
         {
-            return BadRequest("Error");
-            throw;
+            return StatusCode(500, "Error en el servidor");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult Delete(int id)
+    {
+        try
+        {
+            var dbItem = _repository.Owner.GetOwnerById(id);
+            if (dbItem is null)
+            {
+                return NotFound();
+            }
+
+            _repository.Owner.DeleteOwner(dbItem);
+            _repository.Save();
+
+            return NoContent();
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(500, "Error en el servidor");
         }
     }
 }

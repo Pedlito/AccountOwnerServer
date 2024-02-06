@@ -14,7 +14,7 @@ public class DatabaseBaseModel
     public DateTime? DeleteDate { get; set; }
 
     [Column("create_user", TypeName = "smallint")]
-    public required int CreateUser { get; set; }
+    public int CreateUser { get; set; }
 
     [Column("update_user", TypeName = "smallint")]
     public int UpdateUser { get; set; }

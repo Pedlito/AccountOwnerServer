@@ -30,11 +30,24 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
 
     public void CreateOwner(Owner owner)
     {
+        owner.IsEnable = true;
+        owner.CreateDate = DateTime.Now;
+        Console.WriteLine(owner.CreateUser);
+        Console.WriteLine(owner.UpdateUser);
+        Console.WriteLine(owner.UpdateDate);
         Create(owner);
     }
 
     public void UpdateOwner(Owner owner)
     {
+
+        Update(owner);
+    }
+
+    public void DeleteOwner(Owner owner)
+    {
+        owner.IsEnable = false;
+        owner.DeleteDate = DateTime.Now;
         Update(owner);
     }
 }
