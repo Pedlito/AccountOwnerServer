@@ -93,6 +93,7 @@ public class OwnerController : ControllerBase
 
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("hola");
                 return BadRequest("Objeto de modelo invalido");
             }
 
@@ -108,6 +109,41 @@ public class OwnerController : ControllerBase
         catch (System.Exception)
         {
             
+            throw;
+        }
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<OwnerDto> Put(int id, [FromBody] OwnerPutDto data)
+    {
+        try
+        {
+            if (data is null)
+            {
+                return BadRequest("No se ingreso la información del propietario");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Objeto de modelo invalido");
+            }
+
+
+            var dbItem = _repository.Owner.GetOwnerById(id);
+            if (dbItem is null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(data, dbItem);
+            _repository.Owner.UpdateOwner(dbItem);
+            _repository.Save();
+
+            return NoContent();
+        }
+        catch (System.Exception)
+        {
+            return BadRequest("Error");
             throw;
         }
     }

@@ -32,4 +32,9 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     {
         Create(owner);
     }
+
+    public void UpdateOwner(Owner owner)
+    {
+        Update(owner);
+    }
 }

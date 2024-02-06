@@ -8,4 +8,5 @@ public interface IOwnerRepository : IRepositoryBase<Owner>
     Owner? GetOwnerById(int ownerId);
     Owner? GetOwnerWithDetails(int ownerId);
     void CreateOwner(Owner owner);
+    void UpdateOwner(Owner owner);
 }

@@ -29,6 +29,19 @@ public class OwnerPostDto
     [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
     public required DateTime DateOfBirth { get; set; }
 
-    [StringLength(150, ErrorMessage = "La dirección de no puede supierar los 150 caracteres")]
+    [StringLength(150, ErrorMessage = "La dirección no puede superar los 150 caracteres")]
+    public string? Address { get; set; }
+}
+
+public class OwnerPutDto
+{
+    [Required(ErrorMessage = "El nombre del propietario es obligatorio")]
+    [StringLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres")]
+    public required string Name { get; set; }
+
+    [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
+    public required DateTime DateOfBirth { get; set; }
+
+    [StringLength(150, ErrorMessage = "La dirección no puede superar los 150 caracteres")]
     public string? Address { get; set; }
 }
