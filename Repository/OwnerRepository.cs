@@ -11,43 +11,42 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     {
     }
 
-    public IEnumerable<Owner> GetAllOwners()
+    public IEnumerable<Owner> GetAll()
     {
         return FindAll()
             .OrderBy(ow => ow.Name)
             .ToList();
     }
 
-    public Owner? GetOwnerById(int ownerId)
+    public Owner? GetById(int id)
     {
-        return FindByCondition(owner =>owner.Code.Equals(ownerId)).FirstOrDefault();
+        return FindByCondition(owner =>owner.Code.Equals(id)).FirstOrDefault();
     }
 
-    public Owner? GetOwnerWithDetails(int ownerId)
+    public Owner? GetWithDetails(int id)
     {
-        return FindByCondition(owner => owner.Code.Equals(ownerId)).Include(t => t.Accounts).FirstOrDefault();
+        return FindByCondition(owner => owner.Code.Equals(id)).Include(t => t.Accounts).FirstOrDefault();
     }
 
-    public void CreateOwner(Owner owner)
+    public void CreateItem(Owner item)
     {
-        owner.IsEnable = true;
-        owner.CreateDate = DateTime.Now;
-        Console.WriteLine(owner.CreateUser);
-        Console.WriteLine(owner.UpdateUser);
-        Console.WriteLine(owner.UpdateDate);
-        Create(owner);
+        item.IsEnable = true;
+        item.CreateDate = DateTime.Now;
+        Create(item);
     }
 
-    public void UpdateOwner(Owner owner)
+    public void UpdateItem(Owner item)
     {
-
-        Update(owner);
+        item.UpdateDate = DateTime.Now;
+        item.UpdateUser = 5;
+        Update(item);
     }
 
-    public void DeleteOwner(Owner owner)
+    public void DeleteItem(Owner item)
     {
-        owner.IsEnable = false;
-        owner.DeleteDate = DateTime.Now;
-        Update(owner);
+        item.IsEnable = false;
+        item.DeleteDate = DateTime.Now;
+        item.UpdateUser = 6;
+        Update(item);
     }
 }
