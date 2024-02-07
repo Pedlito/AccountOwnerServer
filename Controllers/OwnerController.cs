@@ -111,6 +111,42 @@ public class OwnerController : ControllerBase
         }
     }
 
+    [HttpPost("accounts")]
+    public ActionResult<OwnerDto> PostWithAccounts([FromBody] OwnerPostAccountsDto data)
+    {
+        try
+        {
+            if (data is null)
+            {
+                return BadRequest("No se ingreso la información del propietario");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Objeto de modelo invalido");
+            }
+
+            var dbItem = _mapper.Map<Owner>(data);
+            
+            foreach (var accountDto in data.Accounts)
+            {
+                var account = _mapper.Map<Account>(accountDto);
+                dbItem.AppendAccount(account);
+            }
+
+            _repository.Owner.CreateItem(dbItem);
+            _repository.Save();
+
+
+            var createdItem = _mapper.Map<OwnerDto>(dbItem);
+            return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(500, "Error en el servidor");
+        }
+    }
+
     [HttpPut("{id}")]
     public ActionResult Put(int id, [FromBody] OwnerPutDto data)
     {

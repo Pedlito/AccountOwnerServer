@@ -10,6 +10,7 @@ public class MappingProfile : Profile
         CreateMap<Owner, OwnerDto>();
         CreateMap<Owner, OwnerAccountsDto>();
         CreateMap<OwnerPostDto, Owner>();
+        CreateMap<OwnerPostAccountsDto, Owner>().ForMember(t => t.Accounts, opt => opt.Ignore());
         CreateMap<Account, AccountDto>();
         CreateMap<OwnerPutDto, Owner>();
 
@@ -17,5 +18,6 @@ public class MappingProfile : Profile
         CreateMap<Account, AccountDto>();
         CreateMap<AccountPostDto, Account>();
         CreateMap<AccountPutDto, Account>();
+        CreateMap<OwnerAccountPostDto, Account>();
     }
 }
