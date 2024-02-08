@@ -4,10 +4,10 @@ namespace AccountOwnerServer.Contracts;
 
 public interface IOwnerRepository : IRepositoryBase<Owner>
 {
-    IEnumerable<Owner> GetAllOwners();
-    Owner? GetOwnerById(int ownerId);
-    Owner? GetOwnerWithDetails(int ownerId);
-    void CreateOwner(Owner owner);
-    void UpdateOwner(Owner owner);
-    void DeleteOwner(Owner owner);
+    IEnumerable<Owner> GetAll();
+    Owner? GetById(int ownerId);
+    Owner? GetWithDetails(int ownerId);
+    void CreateItem(Owner owner);
+    void UpdateItem(Owner owner);
+    void DeleteItem(Owner owner);
 }

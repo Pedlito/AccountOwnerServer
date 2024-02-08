@@ -17,6 +17,14 @@ public class Owner : DatabaseBaseModel
     public string? Address { get; set; }
 
     public virtual ICollection<Account> Accounts { get; set; }
+
+    public void AppendAccount(Account account)
+    {
+        account.CreateDate = DateTime.Now;
+        account.CreateUser = 10;
+        account.IsEnable = true;
+        this.Accounts.Add(account);
+    }
 }
 
 public class OwnerEntityTypeConf : IEntityTypeConfiguration<Owner>

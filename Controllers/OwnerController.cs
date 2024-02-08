@@ -10,8 +10,8 @@ namespace AccountOwnerServer.Controllers;
 [Route("api/owners")]
 public class OwnerController : ControllerBase
 {
-    private IRepositoryWrapper _repository;
-    private IMapper _mapper;
+    private readonly IRepositoryWrapper _repository;
+    private readonly IMapper _mapper;
 
     public OwnerController(IRepositoryWrapper repository, IMapper mapper)
     {
@@ -24,7 +24,7 @@ public class OwnerController : ControllerBase
     {
         try
         {
-            var dbEnum = _repository.Owner.GetAllOwners();
+            var dbEnum = _repository.Owner.GetAll();
 
             var result = _mapper.Map<IEnumerable<OwnerDto>>(dbEnum);
             return Ok(result);
@@ -40,7 +40,7 @@ public class OwnerController : ControllerBase
     {
         try
         {
-            var dbItem = _repository.Owner.GetOwnerById(id);
+            var dbItem = _repository.Owner.GetById(id);
 
             if (dbItem is null)
             {
@@ -63,7 +63,7 @@ public class OwnerController : ControllerBase
     {
         try
         {
-            var dbItem = _repository.Owner.GetOwnerWithDetails(id);
+            var dbItem = _repository.Owner.GetWithDetails(id);
 
             if (dbItem is null)
             {
@@ -93,13 +93,12 @@ public class OwnerController : ControllerBase
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("hola");
                 return BadRequest("Objeto de modelo invalido");
             }
 
             var dbItem = _mapper.Map<Owner>(data);
 
-            _repository.Owner.CreateOwner(dbItem);
+            _repository.Owner.CreateItem(dbItem);
             _repository.Save();
 
             var createdItem = _mapper.Map<OwnerDto>(dbItem);
@@ -112,8 +111,44 @@ public class OwnerController : ControllerBase
         }
     }
 
+    [HttpPost("accounts")]
+    public ActionResult<OwnerDto> PostWithAccounts([FromBody] OwnerPostAccountsDto data)
+    {
+        try
+        {
+            if (data is null)
+            {
+                return BadRequest("No se ingreso la información del propietario");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Objeto de modelo invalido");
+            }
+
+            var dbItem = _mapper.Map<Owner>(data);
+            
+            foreach (var accountDto in data.Accounts)
+            {
+                var account = _mapper.Map<Account>(accountDto);
+                dbItem.AppendAccount(account);
+            }
+
+            _repository.Owner.CreateItem(dbItem);
+            _repository.Save();
+
+
+            var createdItem = _mapper.Map<OwnerDto>(dbItem);
+            return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(500, "Error en el servidor");
+        }
+    }
+
     [HttpPut("{id}")]
-    public ActionResult<OwnerDto> Put(int id, [FromBody] OwnerPutDto data)
+    public ActionResult Put(int id, [FromBody] OwnerPutDto data)
     {
         try
         {
@@ -128,14 +163,14 @@ public class OwnerController : ControllerBase
             }
 
 
-            var dbItem = _repository.Owner.GetOwnerById(id);
+            var dbItem = _repository.Owner.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();
             }
 
             _mapper.Map(data, dbItem);
-            _repository.Owner.UpdateOwner(dbItem);
+            _repository.Owner.UpdateItem(dbItem);
             _repository.Save();
 
             return NoContent();
@@ -151,7 +186,7 @@ public class OwnerController : ControllerBase
     {
         try
         {
-            var dbItem = _repository.Owner.GetOwnerById(id);
+            var dbItem = _repository.Owner.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();
@@ -162,7 +197,7 @@ public class OwnerController : ControllerBase
                 return BadRequest("No se puede eliminar este propietario, Primero se deben de eliminar las cuentas");
             }
 
-            _repository.Owner.DeleteOwner(dbItem);
+            _repository.Owner.DeleteItem(dbItem);
             _repository.Save();
 
             return NoContent();
