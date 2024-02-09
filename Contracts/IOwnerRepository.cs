@@ -1,10 +1,11 @@
+using Entities.Helpers;
 using Entities.Models;
 
 namespace AccountOwnerServer.Contracts;
 
 public interface IOwnerRepository : IRepositoryBase<Owner>
 {
-    IEnumerable<Owner> GetAll();
+    PagedList<Owner> GetAll(OwnerParameters parameters);
     Owner? GetById(int ownerId);
     Owner? GetWithDetails(int ownerId);
     void CreateItem(Owner owner);

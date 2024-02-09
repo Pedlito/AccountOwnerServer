@@ -3,6 +3,7 @@ using AutoMapper;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AccountOwnerServer.Controllers;
 
@@ -14,17 +15,29 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
-    public ActionResult<IEnumerable<AccountDto>> Get()
+    public ActionResult<IEnumerable<AccountDto>> Get([FromQuery] AccountParameters parameters)
     {
         try
         {
-            var dbEnum = _repository.Account.GetAll();
+            var dbEnum = _repository.Account.GetAll(parameters);
+
+            var metadata = new
+            {
+                dbEnum.TotalCount,
+                dbEnum.PageSize,
+                dbEnum.CurrentPage,
+                dbEnum.TotalPages,
+                dbEnum.HasNext,
+                dbEnum.HasPrevious
+            };
+
+            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
 
             var result = _mapper.Map<IEnumerable<AccountDto>>(dbEnum);
             return Ok(result);
         }
         catch (System.Exception)
-        {   
+        {
             return StatusCode(500, "Error en el servidor");
         }
     }

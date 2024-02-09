@@ -3,6 +3,7 @@ using AutoMapper;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AccountOwnerServer.Controllers;
 
@@ -20,11 +21,23 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OwnerDto>> Get()
+    public ActionResult<IEnumerable<OwnerDto>> Get([FromQuery] OwnerParameters parameters)
     {
         try
         {
-            var dbEnum = _repository.Owner.GetAll();
+            var dbEnum = _repository.Owner.GetAll(parameters);
+
+            var metadata = new
+            {
+                dbEnum.TotalCount,
+                dbEnum.PageSize,
+                dbEnum.CurrentPage,
+                dbEnum.TotalPages,
+                dbEnum.HasNext,
+                dbEnum.HasPrevious
+            };
+
+            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
 
             var result = _mapper.Map<IEnumerable<OwnerDto>>(dbEnum);
             return Ok(result);

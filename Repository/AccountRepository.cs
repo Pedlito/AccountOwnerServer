@@ -1,5 +1,6 @@
 using AccountOwnerServer.Contracts;
 using Entities;
+using Entities.Helpers;
 using Entities.Models;
 
 namespace AccountOwnerServer.Repository;
@@ -11,9 +12,9 @@ public class AccountRepository : RepositoryBase<Account>, IAccountRepository
         
     }
 
-    public IEnumerable<Account> GetAll()
+    public PagedList<Account> GetAll(AccountParameters parameters)
     {
-        return FindAll().OrderBy(t => t.OwnerCode).ToList();
+        return PagedList<Account>.ToPagedList(FindAll().OrderBy(t => t.OwnerCode), parameters.PageNumber, parameters.PageSize);
     }
 
     public Account? GetById(int id)

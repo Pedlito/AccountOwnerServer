@@ -1,5 +1,6 @@
 using AccountOwnerServer.Contracts;
 using Entities;
+using Entities.Helpers;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,16 +12,14 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     {
     }
 
-    public IEnumerable<Owner> GetAll()
+    public PagedList<Owner> GetAll(OwnerParameters parameters)
     {
-        return FindAll()
-            .OrderBy(ow => ow.Name)
-            .ToList();
+        return PagedList<Owner>.ToPagedList(FindAll().OrderBy(t => t.Code), parameters.PageNumber, parameters.PageSize);
     }
 
     public Owner? GetById(int id)
     {
-        return FindByCondition(owner =>owner.Code.Equals(id)).FirstOrDefault();
+        return FindByCondition(owner => owner.Code.Equals(id)).FirstOrDefault();
     }
 
     public Owner? GetWithDetails(int id)
