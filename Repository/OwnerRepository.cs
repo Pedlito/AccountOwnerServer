@@ -14,7 +14,10 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
 
     public PagedList<Owner> GetAll(OwnerParameters parameters)
     {
-        return PagedList<Owner>.ToPagedList(FindAll().OrderBy(t => t.Code), parameters.PageNumber, parameters.PageSize);
+        var query = FindByCondition(t => t.DateOfBirth.Year >= parameters.MinYearBirth && t.DateOfBirth.Year <= parameters.MaxYearBirth)
+            .OrderBy(t => t.Code);
+            
+        return PagedList<Owner>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
     }
 
     public Owner? GetById(int id)
