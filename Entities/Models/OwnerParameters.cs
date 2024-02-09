@@ -6,4 +6,6 @@ public class OwnerParameters : QueryStringParameters
     public uint MaxYearBirth { get; set; } = (uint)DateTime.Now.Year;
 
     public bool ValidYearRange => MaxYearBirth > MinYearBirth;
+
+    public string? Name { get; set; }
 }
