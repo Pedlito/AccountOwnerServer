@@ -8,17 +8,19 @@ namespace AccountOwnerServer.Repository;
 
 public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
 {
-    public OwnerRepository(AppDbContext context) : base(context)
+    private ISortHelper<Owner> _sortHelper;
+
+    public OwnerRepository(AppDbContext context, ISortHelper<Owner> sortHelper) : base(context)
     {
+        _sortHelper = sortHelper;
     }
 
     public PagedList<Owner> GetAll(OwnerParameters parameters)
     {
         var query = FindByCondition(t => t.DateOfBirth.Year >= parameters.MinYearBirth && t.DateOfBirth.Year <= parameters.MaxYearBirth);
-
         SearchByName(ref query, parameters.Name);
-
-        return PagedList<Owner>.ToPagedList(query.OrderBy(t => t.Code), parameters.PageNumber, parameters.PageSize);
+        var sortedQuery = _sortHelper.ApplySort(query, parameters.OrderBy);
+        return PagedList<Owner>.ToPagedList(sortedQuery, parameters.PageNumber, parameters.PageSize);
     }
 
     private void SearchByName(ref IQueryable<Owner> query, string? name)

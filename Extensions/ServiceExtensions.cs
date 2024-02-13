@@ -1,6 +1,8 @@
 using AccountOwnerServer.Contracts;
 using AccountOwnerServer.Repository;
 using Entities;
+using Entities.Helpers;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountOwnerServer.Extensions;
@@ -26,6 +28,7 @@ public static class ServiceExtensions
 
     public static void ConfigureRepositoryWrapper(this IServiceCollection services)
     {
+        services.AddScoped<ISortHelper<Owner>, SortHelper<Owner>>();
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
 }
