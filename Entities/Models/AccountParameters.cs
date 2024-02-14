@@ -6,4 +6,8 @@ public class AccountParameters : QueryStringParameters
     {
         OrderBy = "code";
     }
+
+    public uint? Code { get; set; }
+    public string? AccountType { get; set; }
+    public uint? OwnerCode { get; set; }
 }

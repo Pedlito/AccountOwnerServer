@@ -12,6 +12,7 @@ namespace AccountOwnerServer.Repository;
         private IAccountRepository? _account;
 
         private ISortHelper<Owner> _ownerSortHelper;
+        private ISortHelper<Account> _accountSortHelper;
 
 
         public IOwnerRepository Owner {
@@ -22,14 +23,15 @@ namespace AccountOwnerServer.Repository;
         }
         public IAccountRepository Account {
             get {
-                _account ??= new AccountRepository(_repoContext);
+                _account ??= new AccountRepository(_repoContext, _accountSortHelper);
                 return _account;
             }
         }
-        public RepositoryWrapper(AppDbContext repositoryContext, ISortHelper<Owner> ownerSortHelper)
+        public RepositoryWrapper(AppDbContext repositoryContext, ISortHelper<Owner> ownerSortHelper, ISortHelper<Account> accountSortHelper)
         {
             _repoContext = repositoryContext;
             _ownerSortHelper = ownerSortHelper;
+            _accountSortHelper = accountSortHelper;
         }
         public void Save()
         {
