@@ -8,9 +8,9 @@ namespace AccountOwnerServer.Repository;
 
 public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
 {
-    private ISortHelper<Owner> _sortHelper;
+    private IQueryHelper<Owner> _sortHelper;
 
-    public OwnerRepository(AppDbContext context, ISortHelper<Owner> sortHelper) : base(context)
+    public OwnerRepository(AppDbContext context, IQueryHelper<Owner> sortHelper) : base(context)
     {
         _sortHelper = sortHelper;
     }

@@ -6,7 +6,7 @@ using Entities.Models;
 
 namespace Entities.Helpers;
 
-public class SortHelper<T> : ISortHelper<T>
+public class QueryHelper<T> : IQueryHelper<T>
 {
     public IQueryable<T> ApplySort(IQueryable<T> query, string? orderByStr)
     {

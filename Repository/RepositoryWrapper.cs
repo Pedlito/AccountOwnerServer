@@ -11,8 +11,8 @@ namespace AccountOwnerServer.Repository;
         private IOwnerRepository? _owner;
         private IAccountRepository? _account;
 
-        private ISortHelper<Owner> _ownerSortHelper;
-        private ISortHelper<Account> _accountSortHelper;
+        private IQueryHelper<Owner> _ownerSortHelper;
+        private IQueryHelper<Account> _accountSortHelper;
 
 
         public IOwnerRepository Owner {
@@ -27,7 +27,7 @@ namespace AccountOwnerServer.Repository;
                 return _account;
             }
         }
-        public RepositoryWrapper(AppDbContext repositoryContext, ISortHelper<Owner> ownerSortHelper, ISortHelper<Account> accountSortHelper)
+        public RepositoryWrapper(AppDbContext repositoryContext, IQueryHelper<Owner> ownerSortHelper, IQueryHelper<Account> accountSortHelper)
         {
             _repoContext = repositoryContext;
             _ownerSortHelper = ownerSortHelper;

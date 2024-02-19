@@ -11,9 +11,9 @@ namespace AccountOwnerServer.Repository;
 
 public class AccountRepository : RepositoryBase<Account>, IAccountRepository
 {
-    private ISortHelper<Account> _sortHelper;
+    private IQueryHelper<Account> _sortHelper;
 
-    public AccountRepository(AppDbContext context, ISortHelper<Account> sortHelper) : base(context)
+    public AccountRepository(AppDbContext context, IQueryHelper<Account> sortHelper) : base(context)
     {
         this._sortHelper = sortHelper;
     }
