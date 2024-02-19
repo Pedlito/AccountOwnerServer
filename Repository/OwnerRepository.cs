@@ -18,9 +18,9 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     public PagedList<Owner> GetAll(OwnerParameters parameters)
     {
         var query = FindAll();
-        var filteredQuery = _sortHelper.ApplyFilters(query, parameters);
-        var sortedQuery = _sortHelper.ApplySort(filteredQuery, parameters.OrderBy);
-        return PagedList<Owner>.ToPagedList(sortedQuery, parameters.PageNumber, parameters.PageSize);
+        query = _sortHelper.ApplyFilters(query, parameters);
+        query = _sortHelper.ApplySort(query, parameters.OrderBy);
+        return PagedList<Owner>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
     }
 
     public Owner? GetById(int id)
