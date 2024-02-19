@@ -17,20 +17,10 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
 
     public PagedList<Owner> GetAll(OwnerParameters parameters)
     {
-        var query = FindByCondition(t => t.DateOfBirth.Year >= parameters.MinYearBirth && t.DateOfBirth.Year <= parameters.MaxYearBirth);
-        SearchByName(ref query, parameters.Name);
-        var sortedQuery = _sortHelper.ApplySort(query, parameters.OrderBy);
+        var query = FindAll();
+        var filteredQuery = _sortHelper.ApplyFilters(query, parameters);
+        var sortedQuery = _sortHelper.ApplySort(filteredQuery, parameters.OrderBy);
         return PagedList<Owner>.ToPagedList(sortedQuery, parameters.PageNumber, parameters.PageSize);
-    }
-
-    private void SearchByName(ref IQueryable<Owner> query, string? name)
-    {
-        if (!query.Any() || string.IsNullOrWhiteSpace(name))
-        {
-            return;
-        }
-
-        query = query.Where(t => t.Name.ToLower().Contains(name.Trim().ToLower()));
     }
 
     public Owner? GetById(int id)

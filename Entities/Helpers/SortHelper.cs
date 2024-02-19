@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using Entities.Models;
 
 namespace Entities.Helpers;
 
@@ -42,9 +43,51 @@ public class SortHelper<T> : ISortHelper<T>
         }
 
         string orderString = orderQueryBuilder.ToString().TrimEnd(',', ' ');
-
-        Console.WriteLine(orderString);
-
         return query.OrderBy(orderString);
+    }
+
+    public IQueryable<T> ApplyFilters(IQueryable<T> query, QueryStringParameters parameters)
+    {
+        var parametersProperties = parameters.GetType().GetProperties()
+            .Where(p => !typeof(QueryStringParameters).GetProperties().Select(q => q.Name).Contains(p.Name));
+        var objectProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var whereString = new StringBuilder();
+        
+        foreach (PropertyInfo param in parametersProperties)
+        {
+            var objProperty = objectProperties.FirstOrDefault(obj => obj.Name.Equals(param.Name, StringComparison.InvariantCultureIgnoreCase));
+
+            if (objProperty == null)
+            {
+                continue;
+            }
+
+            if (param.GetValue(parameters) == null)
+            {
+                continue;
+            }
+
+            if (whereString.Length > 1)
+            {
+                whereString.Append(" and ");
+            }
+
+            if (param.PropertyType == typeof(string))
+            {
+                whereString.Append($"{objProperty.Name}.ToLower().Contains(\"{param.GetValue(parameters)!.ToString()!.ToLowerInvariant()}\")");
+            }
+            else
+            {
+                whereString.Append($"{objProperty.Name} = {param.GetValue(parameters)}");
+
+            }
+        }
+
+        if (whereString.Length == 0)
+        {
+            return query;   
+        }
+
+        return query.Where(whereString.ToString());
     }
 }

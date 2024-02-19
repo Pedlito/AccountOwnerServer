@@ -25,11 +25,6 @@ public class OwnerController : ControllerBase
     {
         try
         {
-            if (!parameters.ValidYearRange)
-            {
-                return BadRequest("El año de nacimiento maximo no puede ser menor al año de nacimiento menor");
-            }
-
             var dbEnum = _repository.Owner.GetAll(parameters);
 
             var metadata = new
