@@ -15,11 +15,11 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
-    public ActionResult<IEnumerable<AccountDto>> Get([FromQuery] AccountParameters parameters)
+    public async Task<ActionResult<IEnumerable<AccountDto>>> Get([FromQuery] AccountParameters parameters)
     {
         try
         {
-            var dbEnum = _repository.Account.GetAll(parameters);
+            var dbEnum = await _repository.Account.GetAll(parameters);
 
             var metadata = new
             {
@@ -43,11 +43,11 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     }
 
     [HttpGet("{id}", Name = "AccountById")]
-    public ActionResult<AccountDto> GetById(int id)
+    public async Task<ActionResult<AccountDto>> GetById(int id)
     {
         try
         {
-            var dbItem = _repository.Account.GetById(id);
+            var dbItem = await _repository.Account.GetById(id);
 
             if (dbItem is null)
             {
@@ -96,7 +96,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromBody] AccountPutDto data)
+    public async Task<ActionResult> Put(int id, [FromBody] AccountPutDto data)
     {
         try
         {
@@ -110,7 +110,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
                 return BadRequest("Objeto de modelo invalido");
             }
 
-            var dbItem = _repository.Account.GetById(id);
+            var dbItem = await _repository.Account.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();
@@ -129,11 +129,11 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     }
 
     [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {
-            var dbItem = _repository.Account.GetById(id);
+            var dbItem = await _repository.Account.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();

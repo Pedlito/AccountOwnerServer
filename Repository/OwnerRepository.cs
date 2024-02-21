@@ -15,22 +15,22 @@ public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
         _sortHelper = sortHelper;
     }
 
-    public PagedList<Owner> GetAll(OwnerParameters parameters)
+    public Task<PagedList<Owner>> GetAll(OwnerParameters parameters)
     {
         var query = FindAll();
         query = _sortHelper.ApplyFilters(query, parameters);
         query = _sortHelper.ApplySort(query, parameters.OrderBy);
-        return PagedList<Owner>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
+        return PagedList<Owner>.ToPagedListAsync(query, parameters.PageNumber, parameters.PageSize);
     }
 
-    public Owner? GetById(int id)
+    public async Task<Owner?> GetById(int id)
     {
-        return FindByCondition(owner => owner.Code.Equals(id)).FirstOrDefault();
+        return await FindByCondition(owner => owner.Code.Equals(id)).FirstOrDefaultAsync();
     }
 
-    public Owner? GetWithDetails(int id)
+    public async Task<Owner?> GetWithDetails(int id)
     {
-        return FindByCondition(owner => owner.Code.Equals(id)).Include(t => t.Accounts).FirstOrDefault();
+        return await FindByCondition(owner => owner.Code.Equals(id)).Include(t => t.Accounts).FirstOrDefaultAsync();
     }
 
     public void CreateItem(Owner item)

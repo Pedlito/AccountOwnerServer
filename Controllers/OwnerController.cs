@@ -21,11 +21,11 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OwnerDto>> Get([FromQuery] OwnerParameters parameters)
+    public async Task<ActionResult<IEnumerable<OwnerDto>>> Get([FromQuery] OwnerParameters parameters)
     {
         try
         {
-            var dbEnum = _repository.Owner.GetAll(parameters);
+            var dbEnum = await _repository.Owner.GetAll(parameters);
 
             var metadata = new
             {
@@ -49,11 +49,11 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "OwnerById")]
-    public ActionResult<OwnerDto> GetById(int id)
+    public async Task<ActionResult<OwnerDto>> GetById(int id)
     {
         try
         {
-            var dbItem = _repository.Owner.GetById(id);
+            var dbItem = await _repository.Owner.GetById(id);
 
             if (dbItem is null)
             {
@@ -161,7 +161,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromBody] OwnerPutDto data)
+    public async Task<ActionResult> Put(int id, [FromBody] OwnerPutDto data)
     {
         try
         {
@@ -176,7 +176,7 @@ public class OwnerController : ControllerBase
             }
 
 
-            var dbItem = _repository.Owner.GetById(id);
+            var dbItem = await _repository.Owner.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();
@@ -195,11 +195,11 @@ public class OwnerController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {
-            var dbItem = _repository.Owner.GetById(id);
+            var dbItem = await _repository.Owner.GetById(id);
             if (dbItem is null)
             {
                 return NotFound();

@@ -6,6 +6,7 @@ using Entities;
 using Entities.Helpers;
 using Entities.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountOwnerServer.Repository;
 
@@ -18,17 +19,17 @@ public class AccountRepository : RepositoryBase<Account>, IAccountRepository
         this._sortHelper = sortHelper;
     }
 
-    public PagedList<Account> GetAll(AccountParameters parameters)
+    public Task<PagedList<Account>> GetAll(AccountParameters parameters)
     {
         var query = FindAll();
         query = _sortHelper.ApplyFilters(query, parameters);
         query = _sortHelper.ApplySort(query, parameters.OrderBy);
-        return PagedList<Account>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
+        return PagedList<Account>.ToPagedListAsync(query, parameters.PageNumber, parameters.PageSize);
     }
 
-    public Account? GetById(int id)
+    public async Task<Account?> GetById(int id)
     {
-        return FindByCondition(t => t.Code.Equals(id)).FirstOrDefault();
+        return await FindByCondition(t => t.Code.Equals(id)).FirstOrDefaultAsync();
     }
 
     public void CreateItem(Account item)

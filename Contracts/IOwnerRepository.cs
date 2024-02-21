@@ -5,9 +5,9 @@ namespace AccountOwnerServer.Contracts;
 
 public interface IOwnerRepository : IRepositoryBase<Owner>
 {
-    PagedList<Owner> GetAll(OwnerParameters parameters);
-    Owner? GetById(int ownerId);
-    Owner? GetWithDetails(int ownerId);
+    Task<PagedList<Owner>> GetAll(OwnerParameters parameters);
+    Task<Owner?> GetById(int ownerId);
+    Task<Owner?> GetWithDetails(int ownerId);
     void CreateItem(Owner owner);
     void UpdateItem(Owner owner);
     void DeleteItem(Owner owner);

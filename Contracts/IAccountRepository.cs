@@ -5,8 +5,8 @@ namespace AccountOwnerServer.Contracts;
 
 public interface IAccountRepository : IRepositoryBase<Account>
 {
-    PagedList<Account> GetAll(AccountParameters parameters);
-    Account? GetById(int id);
+    Task<PagedList<Account>> GetAll(AccountParameters parameters);
+    Task<Account?> GetById(int id);
     void CreateItem(Account item);
     void UpdateItem(Account item);
     void DeleteItem(Account item);
