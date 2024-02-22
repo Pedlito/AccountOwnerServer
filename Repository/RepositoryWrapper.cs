@@ -33,8 +33,8 @@ namespace AccountOwnerServer.Repository;
             _ownerSortHelper = ownerSortHelper;
             _accountSortHelper = accountSortHelper;
         }
-        public void Save()
+        public async Task SaveAsync()
         {
-            _repoContext.SaveChanges();
+            await _repoContext.SaveChangesAsync();
         }
     }

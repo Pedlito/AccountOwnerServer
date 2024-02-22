@@ -95,7 +95,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<OwnerDto> Post([FromBody] OwnerPostDto data)
+    public async Task<ActionResult<OwnerDto>> Post([FromBody] OwnerPostDto data)
     {
         try
         {
@@ -112,7 +112,7 @@ public class OwnerController : ControllerBase
             var dbItem = _mapper.Map<Owner>(data);
 
             _repository.Owner.CreateItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdItem = _mapper.Map<OwnerDto>(dbItem);
 
@@ -125,7 +125,7 @@ public class OwnerController : ControllerBase
     }
 
     [HttpPost("accounts")]
-    public ActionResult<OwnerDto> PostWithAccounts([FromBody] OwnerPostAccountsDto data)
+    public async Task<ActionResult<OwnerDto>> PostWithAccounts([FromBody] OwnerPostAccountsDto data)
     {
         try
         {
@@ -148,7 +148,7 @@ public class OwnerController : ControllerBase
             }
 
             _repository.Owner.CreateItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
 
             var createdItem = _mapper.Map<OwnerDto>(dbItem);
@@ -175,7 +175,6 @@ public class OwnerController : ControllerBase
                 return BadRequest("Objeto de modelo invalido");
             }
 
-
             var dbItem = await _repository.Owner.GetById(id);
             if (dbItem is null)
             {
@@ -184,7 +183,7 @@ public class OwnerController : ControllerBase
 
             _mapper.Map(data, dbItem);
             _repository.Owner.UpdateItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
@@ -211,7 +210,7 @@ public class OwnerController : ControllerBase
             }
 
             _repository.Owner.DeleteItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }

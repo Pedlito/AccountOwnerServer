@@ -66,7 +66,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     }
 
     [HttpPost]
-    public ActionResult<AccountDto> Post([FromBody] AccountPostDto data)
+    public async Task<ActionResult<AccountDto>> Post([FromBody] AccountPostDto data)
     {
         try
         {
@@ -83,7 +83,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
             var newItem = _mapper.Map<Account>(data);
 
             _repository.Account.CreateItem(newItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var result = _mapper.Map<AccountDto>(newItem);
 
@@ -118,7 +118,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
 
             _mapper.Map(data, dbItem);
             _repository.Account.UpdateItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
@@ -140,7 +140,7 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
             }
 
             _repository.Account.DeleteItem(dbItem);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
