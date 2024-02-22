@@ -23,200 +23,151 @@ public class OwnerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OwnerDto>>> Get([FromQuery] OwnerParameters parameters)
     {
-        try
+        var dbEnum = await _repository.Owner.GetAll(parameters);
+
+        var metadata = new
         {
-            var dbEnum = await _repository.Owner.GetAll(parameters);
+            dbEnum.TotalCount,
+            dbEnum.PageSize,
+            dbEnum.CurrentPage,
+            dbEnum.TotalPages,
+            dbEnum.HasNext,
+            dbEnum.HasPrevious
+        };
 
-            var metadata = new
-            {
-                dbEnum.TotalCount,
-                dbEnum.PageSize,
-                dbEnum.CurrentPage,
-                dbEnum.TotalPages,
-                dbEnum.HasNext,
-                dbEnum.HasPrevious
-            };
+        Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
 
-            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
-
-            var result = _mapper.Map<IEnumerable<OwnerDto>>(dbEnum);
-            return Ok(result);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "Error en el servidor");
-        }
+        var result = _mapper.Map<IEnumerable<OwnerDto>>(dbEnum);
+        return Ok(result);
     }
 
     [HttpGet("{id}", Name = "OwnerById")]
     public async Task<ActionResult<OwnerDto>> GetById(int id)
     {
-        try
-        {
-            var dbItem = await _repository.Owner.GetById(id);
+        var dbItem = await _repository.Owner.GetById(id);
 
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                var result = _mapper.Map<OwnerDto>(dbItem);
-                return Ok(result);
-            }
-        }
-        catch (System.Exception)
+        if (dbItem is null)
         {
-            return StatusCode(500, "Error en el servidor");
+            return NotFound();
+        }
+        else
+        {
+            var result = _mapper.Map<OwnerDto>(dbItem);
+            return Ok(result);
         }
     }
 
     [HttpGet("{id}/accounts")]
     public ActionResult<OwnerAccountsDto> GetWithDetails(int id)
     {
-        try
-        {
-            var dbItem = _repository.Owner.GetWithDetails(id);
+        var dbItem = _repository.Owner.GetWithDetails(id);
 
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                var result = _mapper.Map<OwnerAccountsDto>(dbItem);
-                return Ok(result);
-            }
-        }
-        catch (System.Exception)
+        if (dbItem is null)
         {
-            return StatusCode(500, "Error en el servidor");
+            return NotFound();
+        }
+        else
+        {
+            var result = _mapper.Map<OwnerAccountsDto>(dbItem);
+            return Ok(result);
         }
     }
 
     [HttpPost]
     public async Task<ActionResult<OwnerDto>> Post([FromBody] OwnerPostDto data)
     {
-        try
+        if (data is null)
         {
-            if (data is null)
-            {
-                return BadRequest("No se ingreso la información del propietario");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Objeto de modelo invalido");
-            }
-
-            var dbItem = _mapper.Map<Owner>(data);
-
-            _repository.Owner.CreateItem(dbItem);
-            await _repository.SaveAsync();
-
-            var createdItem = _mapper.Map<OwnerDto>(dbItem);
-
-            return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
+            return BadRequest("No se ingreso la información del propietario");
         }
-        catch (System.Exception)
+
+        if (!ModelState.IsValid)
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("Objeto de modelo invalido");
         }
+
+        var dbItem = _mapper.Map<Owner>(data);
+
+        _repository.Owner.CreateItem(dbItem);
+        await _repository.SaveAsync();
+
+        var createdItem = _mapper.Map<OwnerDto>(dbItem);
+
+        return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
     }
 
     [HttpPost("accounts")]
     public async Task<ActionResult<OwnerDto>> PostWithAccounts([FromBody] OwnerPostAccountsDto data)
     {
-        try
+        if (data is null)
         {
-            if (data is null)
-            {
-                return BadRequest("No se ingreso la información del propietario");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Objeto de modelo invalido");
-            }
-
-            var dbItem = _mapper.Map<Owner>(data);
-            
-            foreach (var accountDto in data.Accounts)
-            {
-                var account = _mapper.Map<Account>(accountDto);
-                dbItem.AppendAccount(account);
-            }
-
-            _repository.Owner.CreateItem(dbItem);
-            await _repository.SaveAsync();
-
-
-            var createdItem = _mapper.Map<OwnerDto>(dbItem);
-            return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
+            return BadRequest("No se ingreso la información del propietario");
         }
-        catch (System.Exception)
+
+        if (!ModelState.IsValid)
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("Objeto de modelo invalido");
         }
+
+        var dbItem = _mapper.Map<Owner>(data);
+
+        foreach (var accountDto in data.Accounts)
+        {
+            var account = _mapper.Map<Account>(accountDto);
+            dbItem.AppendAccount(account);
+        }
+
+        _repository.Owner.CreateItem(dbItem);
+        await _repository.SaveAsync();
+
+
+        var createdItem = _mapper.Map<OwnerDto>(dbItem);
+        return CreatedAtRoute("OwnerById", new { id = createdItem.Code }, createdItem);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, [FromBody] OwnerPutDto data)
     {
-        try
+        if (data is null)
         {
-            if (data is null)
-            {
-                return BadRequest("No se ingreso la información del propietario");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Objeto de modelo invalido");
-            }
-
-            var dbItem = await _repository.Owner.GetById(id);
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(data, dbItem);
-            _repository.Owner.UpdateItem(dbItem);
-            await _repository.SaveAsync();
-
-            return NoContent();
+            return BadRequest("No se ingreso la información del propietario");
         }
-        catch (System.Exception)
+
+        if (!ModelState.IsValid)
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("Objeto de modelo invalido");
         }
+
+        var dbItem = await _repository.Owner.GetById(id);
+        if (dbItem is null)
+        {
+            return NotFound();
+        }
+
+        _mapper.Map(data, dbItem);
+        _repository.Owner.UpdateItem(dbItem);
+        await _repository.SaveAsync();
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
-        try
+        var dbItem = await _repository.Owner.GetById(id);
+        if (dbItem is null)
         {
-            var dbItem = await _repository.Owner.GetById(id);
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-
-            if (_repository.Account.AccountsByOwner(id).Any())
-            {
-                return BadRequest("No se puede eliminar este propietario, Primero se deben de eliminar las cuentas");
-            }
-
-            _repository.Owner.DeleteItem(dbItem);
-            await _repository.SaveAsync();
-
-            return NoContent();
+            return NotFound();
         }
-        catch (System.Exception)
+
+        if (_repository.Account.AccountsByOwner(id).Any())
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("No se puede eliminar este propietario, Primero se deben de eliminar las cuentas");
         }
+
+        _repository.Owner.DeleteItem(dbItem);
+        await _repository.SaveAsync();
+
+        return NoContent();
     }
 }

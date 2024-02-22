@@ -32,4 +32,10 @@ public static class ServiceExtensions
         services.AddScoped<IQueryHelper<Account>, QueryHelper<Account>>();
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
+
+    public static void ConfigureExceptionHandler(this IServiceCollection services)
+    {
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+    }
 }

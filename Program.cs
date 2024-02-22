@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureDBContext(builder.Configuration);
 builder.Services.ConfigureRepositoryWrapper();
+builder.Services.ConfigureExceptionHandler();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
@@ -21,6 +22,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

@@ -17,136 +17,101 @@ public class AccountController(IRepositoryWrapper repository, IMapper mapper) : 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AccountDto>>> Get([FromQuery] AccountParameters parameters)
     {
-        try
+        var dbEnum = await _repository.Account.GetAll(parameters);
+
+        var metadata = new
         {
-            var dbEnum = await _repository.Account.GetAll(parameters);
+            dbEnum.TotalCount,
+            dbEnum.PageSize,
+            dbEnum.CurrentPage,
+            dbEnum.TotalPages,
+            dbEnum.HasNext,
+            dbEnum.HasPrevious
+        };
 
-            var metadata = new
-            {
-                dbEnum.TotalCount,
-                dbEnum.PageSize,
-                dbEnum.CurrentPage,
-                dbEnum.TotalPages,
-                dbEnum.HasNext,
-                dbEnum.HasPrevious
-            };
+        Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
 
-            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
-
-            var result = _mapper.Map<IEnumerable<AccountDto>>(dbEnum);
-            return Ok(result);
-        }
-        catch (System.Exception)
-        {
-            return StatusCode(500, "Error en el servidor");
-        }
+        var result = _mapper.Map<IEnumerable<AccountDto>>(dbEnum);
+        return Ok(result);
     }
 
     [HttpGet("{id}", Name = "AccountById")]
     public async Task<ActionResult<AccountDto>> GetById(int id)
     {
-        try
-        {
-            var dbItem = await _repository.Account.GetById(id);
+        var dbItem = await _repository.Account.GetById(id);
 
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                var result = _mapper.Map<AccountDto>(dbItem);
-                return Ok(result);
-            }
-        }
-        catch (System.Exception)
+        if (dbItem is null)
         {
-            return StatusCode(500, "Error en el servidor");
+            return NotFound();
+        }
+        else
+        {
+            var result = _mapper.Map<AccountDto>(dbItem);
+            return Ok(result);
         }
     }
 
     [HttpPost]
     public async Task<ActionResult<AccountDto>> Post([FromBody] AccountPostDto data)
     {
-        try
+        if (data is null)
         {
-            if (data is null)
-            {
-                return BadRequest("No se ingreso la información de la cuenta");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Objeto de modelo invalido");
-            }
-
-            var newItem = _mapper.Map<Account>(data);
-
-            _repository.Account.CreateItem(newItem);
-            await _repository.SaveAsync();
-
-            var result = _mapper.Map<AccountDto>(newItem);
-
-            return CreatedAtRoute("AccountById", new { id = newItem.Code }, result);
+            return BadRequest("No se ingreso la información de la cuenta");
         }
-        catch (System.Exception)
+
+        if (!ModelState.IsValid)
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("Objeto de modelo invalido");
         }
+
+        var newItem = _mapper.Map<Account>(data);
+
+        _repository.Account.CreateItem(newItem);
+        await _repository.SaveAsync();
+
+        var result = _mapper.Map<AccountDto>(newItem);
+
+        return CreatedAtRoute("AccountById", new { id = newItem.Code }, result);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, [FromBody] AccountPutDto data)
     {
-        try
+        if (data is null)
         {
-            if (data is null)
-            {
-                return BadRequest("No se ingreso la información de la cuenta");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Objeto de modelo invalido");
-            }
-
-            var dbItem = await _repository.Account.GetById(id);
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(data, dbItem);
-            _repository.Account.UpdateItem(dbItem);
-            await _repository.SaveAsync();
-
-            return NoContent();
+            return BadRequest("No se ingreso la información de la cuenta");
         }
-        catch (System.Exception)
+
+        if (!ModelState.IsValid)
         {
-            return StatusCode(500, "Error en el servidor");
+            return BadRequest("Objeto de modelo invalido");
         }
+
+        var dbItem = await _repository.Account.GetById(id);
+        if (dbItem is null)
+        {
+            return NotFound();
+        }
+
+        _mapper.Map(data, dbItem);
+        _repository.Account.UpdateItem(dbItem);
+        await _repository.SaveAsync();
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
-        try
+        var dbItem = await _repository.Account.GetById(id);
+        if (dbItem is null)
         {
-            var dbItem = await _repository.Account.GetById(id);
-            if (dbItem is null)
-            {
-                return NotFound();
-            }
-
-            _repository.Account.DeleteItem(dbItem);
-            await _repository.SaveAsync();
-
-            return NoContent();
+            return NotFound();
         }
-        catch (System.Exception)
-        {
-            return StatusCode(500, "Error en el servidor");
-        }
+
+        _repository.Account.DeleteItem(dbItem);
+        await _repository.SaveAsync();
+
+        return NoContent();
     }
 }
