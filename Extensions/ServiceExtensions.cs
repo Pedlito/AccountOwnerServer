@@ -30,6 +30,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IQueryHelper<Owner>, QueryHelper<Owner>>();
         services.AddScoped<IQueryHelper<Account>, QueryHelper<Account>>();
+        services.AddScoped<IQueryHelper<User>, QueryHelper<User>>();
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
 

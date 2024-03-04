@@ -1,29 +1,25 @@
-using System.Globalization;
-using System.Reflection;
-using System.Text;
 using AccountOwnerServer.Contracts;
 using Entities;
 using Entities.Helpers;
 using Entities.Models;
-using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountOwnerServer.Repository;
 
 public class AccountRepository : RepositoryBase<Account>, IAccountRepository
 {
-    private IQueryHelper<Account> _sortHelper;
+    private IQueryHelper<Account> _queryHelper;
 
-    public AccountRepository(AppDbContext context, IQueryHelper<Account> sortHelper) : base(context)
+    public AccountRepository(AppDbContext context, IQueryHelper<Account> queryHelper) : base(context)
     {
-        this._sortHelper = sortHelper;
+        this._queryHelper = queryHelper;
     }
 
     public Task<PagedList<Account>> GetAll(AccountParameters parameters)
     {
         var query = FindAll();
-        query = _sortHelper.ApplyFilters(query, parameters);
-        query = _sortHelper.ApplySort(query, parameters.OrderBy);
+        query = _queryHelper.ApplyFilters(query, parameters);
+        query = _queryHelper.ApplySort(query, parameters.OrderBy);
         return PagedList<Account>.ToPagedListAsync(query, parameters.PageNumber, parameters.PageSize);
     }
 
