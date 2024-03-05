@@ -10,4 +10,6 @@ public interface IUserRepository : IRepositoryBase<User>
     void CreateItem(User item);
     void UpdateItem(User item);
     void DeleteItem(User item);
+
+    Task<User?> GetByUsername(string username);
 }

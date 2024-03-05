@@ -2,12 +2,14 @@ using AccountOwnerServer.Contracts;
 using AutoMapper;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace AccountOwnerServer.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/users")]
 public class UserController(IRepositoryWrapper repository, IMapper mapper) : ControllerBase
 {

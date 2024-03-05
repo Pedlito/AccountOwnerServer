@@ -7,6 +7,8 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureDBContext(builder.Configuration);
 builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureExceptionHandler();
+builder.Services.ConfigureAuthentication(builder.Configuration);
+builder.Services.ConfigureTokenService();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
@@ -28,6 +30,8 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

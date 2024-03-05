@@ -50,4 +50,9 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         item.UpdateUser = 2;
         Update(item);
     }
+
+    public async Task<User?> GetByUsername(string username)
+    {
+        return await FindByCondition(t => t.UserName.Equals(username)).FirstOrDefaultAsync();
+    }
 }
