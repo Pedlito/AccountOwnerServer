@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AccountOwnerServer.Extensions;
 
@@ -82,6 +83,7 @@ public static class ServiceExtensions
                     Title = "Account Owner Server API",
                     Description = "Web API para repasar y montar bases de un proyecto con .NET 8"
                 });
+
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -91,6 +93,7 @@ public static class ServiceExtensions
                     In = ParameterLocation.Header,
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\""
                 });
+
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement(){
                     {
                         new OpenApiSecurityScheme()

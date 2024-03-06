@@ -1,4 +1,5 @@
 using AccountOwnerServer.Extensions;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +21,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-    app.MapSwagger().RequireAuthorization();
+    app.UseSwaggerUI(options =>
+    {
+        options.DocExpansion(DocExpansion.None);
+    });
 }
 
 app.UseExceptionHandler();
