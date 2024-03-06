@@ -54,12 +54,12 @@ public static class ServiceExtensions
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "localhost:5074",
-                    ValidAudience = "localhost:5074",
+                    ValidIssuer = "",
+                    ValidAudience = "",
                     IssuerSigningKey = key
                 };
             });

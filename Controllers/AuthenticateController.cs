@@ -24,8 +24,14 @@ public class AuthenticationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<string?>> Get([FromBody] LoginPostDto data)
     {
-        Console.WriteLine(data.UserName);
-        Console.WriteLine(data.Password);
-        return await _tokenService.Authenticate(data.UserName, data.Password);
+        string? token = await _tokenService.Authenticate(data.UserName, data.Password);
+        if (token is null)
+        {
+            return Unauthorized();
+        }
+        else
+        {
+            return Ok(token);
+        }
     }
 }
