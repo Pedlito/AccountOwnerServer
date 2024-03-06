@@ -9,12 +9,10 @@ builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureExceptionHandler();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureTokenService();
+builder.Services.ConfigureSwagger();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -23,6 +21,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapSwagger().RequireAuthorization();
 }
 
 app.UseExceptionHandler();
